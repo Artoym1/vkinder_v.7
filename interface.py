@@ -67,11 +67,11 @@ class BotInterface:
                         self.message_send(event.user_id,
                                           f'{self.params["name"]}, введи твой день рождения в формате ДД.ММ.ГГГГ')
 
-                    elif self.params['city'] is None:
+                    if self.params['city'] is None:
                         self.message_send(event.user_id, f'Теперь введи город для поиска... ')
                         city_name_switch = True
 
-                    elif self.params['sex'] is None:
+                    if self.params['sex'] is None:
                         self.message_send(event.user_id, f'{self.params["name"]}, введи цифру: '
                                                          f'1 если ты женщина, цифру '
                                                          f'2 если мужчина')
