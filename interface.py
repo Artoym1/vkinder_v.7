@@ -95,11 +95,8 @@ class BotInterface:
 
                 elif sex_switch is True:
                     sex_user = int(command)
-                    print(sex_user)
                     sex_switch = False
-                    sex = 1 if sex_user == 2 else 2
-                    print(sex)
-                    self.params['sex'] = sex
+                    self.params['sex'] = sex_user
                     self.message_send(event.user_id, f'Отправь "п" или "s" для продолжения.....')
 
                 else:

@@ -41,7 +41,7 @@ class VkTools:
             return res
 
     def search_users(self, params, offset):
-        sex = params['sex']
+        sex = 1 if params['sex'] == 2 else 2
         city = params['city']
         curent_year = datetime.now().year
         user_year = int(params['bdate'].split('.')[2])
