@@ -28,6 +28,7 @@ class BotInterface:
     def event_handler(self):
         longpoll = VkLongPoll(self.interface)
         city_name_switch = False
+        sex_switch = False
         for event in longpoll.listen():
 
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
@@ -70,6 +71,12 @@ class BotInterface:
                         self.message_send(event.user_id, f'Теперь введи город для поиска... ')
                         city_name_switch = True
 
+                    elif self.params['sex'] is None:
+                        self.message_send(event.user_id, f'{self.params["name"]}, введи цифру: '
+                                                         f'1 если ты женщина, цифру '
+                                                         f'2 если мужчина')
+                        sex_switch = True
+
                     else:
                         self.message_send(event.user_id,
                                           f'Данные для поиска загружены из профиля. '
@@ -84,6 +91,15 @@ class BotInterface:
                     city_name_switch = False
                     city_user = self.api.get_city(city_name)
                     self.params['city'] = city_user
+                    self.message_send(event.user_id, f'Отправь "п" или "s" для продолжения.....')
+
+                elif sex_switch is True:
+                    sex_user = int(command)
+                    print(sex_user)
+                    sex_switch = False
+                    sex = 1 if sex_user == 2 else 2
+                    print(sex)
+                    self.params['sex'] = sex
                     self.message_send(event.user_id, f'Отправь "п" или "s" для продолжения.....')
 
                 else:
