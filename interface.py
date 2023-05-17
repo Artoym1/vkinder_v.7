@@ -64,33 +64,33 @@ class BotInterface:
 
                     if self.params['sex'] is None or self.params['city'] is None or self.params['bdate'] is None:
                         self.message_send(event.user_id, f'{self.params["name"]}, у тебя не заполнен профиль ВК, '
-                                                         f'чтобы поиск был точным мы зададим несколько вопросов. '
-                                                         f'Ответь на каждый отдельным сообщением')
+                                                         f'для поиска нам нужно уточнить кое-что... ')
 
-                    if self.params['sex'] is None:
-                        sex_switch = True
-                        self.message_send(event.user_id, f'{self.params["name"]}, Сначала отправь цифру: '
-                                                         f'1 если ты женщина, '
-                                                         f'2 если мужчина')
+                        if self.params['sex'] is None:
+                            sex_switch = True
+                            self.message_send(event.user_id, f'{self.params["name"]}, Кто ты? отправь: '
+                                                             f'"1" если ты женщина, '
+                                                             f'"2" если ты мужчина')
+
+                        if self.params['city'] is None:
+                            city_name_switch = True
+                            self.message_send(event.user_id, f'В каком городе ищем?... ')
+
+                        if self.params['bdate'] is None:
+                            bdate_swith = True
+                            self.message_send(event.user_id, f'Отправь дату твоего рождения в формате ММ.ДД.ГГГГ')
+
                 elif sex_switch is True:
                     sex_user = int(command)
                     print(sex_user)
                     sex_switch = False
                     self.params['sex'] = sex_user
 
-                    if self.params['city'] is None:
-                        city_name_switch = True
-                        self.message_send(event.user_id, f'Введи город для поиска... ')
-
                 elif city_name_switch is True:
                     city_name = command
                     city_name_switch = False
                     city_user = self.api.get_city(city_name)
                     self.params['city'] = city_user
-
-                    if self.params['bdate'] is None:
-                        bdate_swith = True
-                        self.message_send(event.user_id, f'Отправь дату рождения в формате ММ.ДД.ГГГГ')
 
                 elif bdate_swith is True:
                     self.params['bdate'] = command
