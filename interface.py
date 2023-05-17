@@ -28,7 +28,7 @@ class BotInterface:
         city_name_switch = False
         sex_switch = False
         bdate_swith = False
-        new_str =  '\n'
+        new_str = '\n'
         for event in longpoll.listen():
 
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
@@ -69,9 +69,9 @@ class BotInterface:
 
                         if self.params['sex'] is None:
                             sex_switch = True
-                            self.message_send(event.user_id, f'{self.params["name"]}, Кто ты?{new_str} Отправь в '
-                                                             f'отдельном сообщении:{new_str}"1" если ты женщина, '
-                                                             f'{new_str}"2" если ты мужчина')
+                            self.message_send(event.user_id, f'{self.params["name"]}, Скажи нам в '
+                                                             f'отдельном сообщении кого ты хочешь найти{new_str} '
+                                                             f'мужчину или женщину')
 
                         if self.params['city'] is None:
                             city_name_switch = True
@@ -84,13 +84,13 @@ class BotInterface:
                                                              f'{new_str} ММ.ДД.ГГГГ')
 
                 elif sex_switch is True:
-                    sex_user = command
-                    if 'ж' in sex_user.split(sex_user):
-                        sex_user = 1
-                    else:
+                    if 'жен' in command or 'дев' in command or 'баб' in command:
                         sex_user = 2
+                    else:
+                        sex_user = 1
                     sex_switch = False
                     self.params['sex'] = sex_user
+                    print(self.params['sex'])
 
                 elif city_name_switch is True:
                     city_name = command
