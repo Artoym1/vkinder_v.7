@@ -12,14 +12,12 @@ class BotInterface:
         self.interface = vk_api.VkApi(token=comunity_token)
         self.api = VkTools(access_token)
         self.params = None
-        # self.keyboard = self.current_keyboard()
         self.offset = 0
 
     def message_send(self, user_id, message, attachment=None):
         self.interface.method('messages.send',
                               {'user_id': user_id,
                                'message': message,
-                               # 'keyboard': self.keyboard,
                                'attachment': attachment,
                                'random_id': get_random_id()
                                }
@@ -29,6 +27,7 @@ class BotInterface:
         longpoll = VkLongPoll(self.interface)
         city_name_switch = False
         sex_switch = False
+        bdate_swith = False
         for event in longpoll.listen():
 
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
@@ -63,44 +62,45 @@ class BotInterface:
                 elif command == 'старт' or command == 'go':
                     self.params = self.api.get_profile_info(event.user_id)
 
-                    if self.params['bdate'] is None:
-                        self.message_send(event.user_id,
-                                          f'{self.params["name"]}, введи твой день рождения в формате ДД.ММ.ГГГГ')
-
-                    if self.params['city'] is None:
-                        self.message_send(event.user_id, f'Теперь введи город для поиска... ')
-                        city_name_switch = True
+                    if self.params['sex'] is None or self.params['city'] is None or self.params['bdate'] is None:
+                        self.message_send(event.user_id, f'{self.params["name"]}, у тебя не заполнен профиль ВК, '
+                                                         f'чтобы поиск был точным мы зададим несколько вопросов. '
+                                                         f'Ответь на каждый отдельным сообщением')
 
                     if self.params['sex'] is None:
-                        self.message_send(event.user_id, f'{self.params["name"]}, введи цифру: '
-                                                         f'1 если ты женщина, цифру '
-                                                         f'2 если мужчина')
                         sex_switch = True
+                        self.message_send(event.user_id, f'{self.params["name"]}, Сначала отправь цифру: '
+                                                         f'1 если ты женщина, '
+                                                         f'2 если мужчина')
+                elif sex_switch is True:
+                    sex_user = int(command)
+                    print(sex_user)
+                    sex_switch = False
+                    self.params['sex'] = sex_user
 
-                    else:
-                        self.message_send(event.user_id,
-                                          f'Данные для поиска загружены из профиля. '
-                                          f'Отправь "п" или "s" для продолжения... ')
-
-                elif len(command.split('.')) == 3:
-                    self.params['bdate'] = command
-                    self.message_send(event.user_id, f'Отправь "п" или "s" для продолжения...')
+                    if self.params['city'] is None:
+                        city_name_switch = True
+                        self.message_send(event.user_id, f'Введи город для поиска... ')
 
                 elif city_name_switch is True:
                     city_name = command
                     city_name_switch = False
                     city_user = self.api.get_city(city_name)
                     self.params['city'] = city_user
-                    self.message_send(event.user_id, f'Отправь "п" или "s" для продолжения.....')
 
-                elif sex_switch is True:
-                    sex_user = int(command)
-                    sex_switch = False
-                    self.params['sex'] = sex_user
+                    if self.params['bdate'] is None:
+                        bdate_swith = True
+                        self.message_send(event.user_id, f'Отправь дату рождения в формате ММ.ДД.ГГГГ')
+
+                elif bdate_swith is True:
+                    self.params['bdate'] = command
+                    bdate_swith = False
+
                     self.message_send(event.user_id, f'Отправь "п" или "s" для продолжения.....')
 
                 else:
-                    self.message_send(event.user_id, f'Привет, для начала поиска введи "Старт" или "GO"')
+                    self.message_send(event.user_id, f'Для начала поиска введи "Старт" или "GO". '
+                                                     f'Отправь "п" или "s" для продолжения...')
 
 
 if __name__ == '__main__':
