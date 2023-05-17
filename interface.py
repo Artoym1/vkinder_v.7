@@ -90,7 +90,7 @@ class BotInterface:
                         sex_user = 1
                     sex_switch = False
                     self.params['sex'] = sex_user
-                    print(self.params['sex'])
+
 
                 elif city_name_switch is True:
                     city_name = command
