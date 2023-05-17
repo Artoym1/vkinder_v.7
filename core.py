@@ -11,7 +11,7 @@ class VkTools:
     def get_profile_info(self, user_id):
         info, = self.api.method('users.get',
                                 {'user_ids': user_id,
-                                 'fields': 'city ,bdate ,sex== None ,relation,home_town'
+                                 'fields': 'city ,bdate== None ,sex== None ,relation,home_town'
                                  }
                                 )
         user_info = {'name': info['first_name'],
