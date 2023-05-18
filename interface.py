@@ -38,10 +38,11 @@ class BotInterface:
                     else:
                         users = self.api.search_users(self.params, self.offset)
                         self.offset = self.offset + 1
-                        user = users.pop()
+                        try:
+                            user = users.pop()
+                        except KeyError:
+                            return
                         insert_viewed(user["id"])
-                        # while insert_viewed(user["id"]):
-                        #     user = users.pop()
                         if True:
                             photos_user = self.api.get_photos(user['id'])
                             attachment = ''
