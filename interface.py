@@ -42,28 +42,29 @@ class BotInterface:
                             user = users.pop()
                         except KeyError:
                             return
-                        insert_viewed(user["id"])
-                        if True:
-                            photos_user = self.api.get_photos(user['id'])
-                            attachment = ''
-                            for num, photo in enumerate(photos_user):
-                                attachment += f'photo{user["id"]}_{photo["id"]},'
-                                if num == 2:
-                                    break
-                            self.message_send(event.user_id,
-                                              f'Встречайте {user["name"]}, vk.com/id{user["id"]}',
-                                              attachment=attachment
-                                              )
-                            add_viewed(user["id"], event.user_id)
-                            self.message_send(event.user_id,
-                                              f'{self.params["name"]}, отправь "П" или "S" {new_str}для продолжения...')
+                        while insert_viewed(user["id"]):
+                            user = users.pop()
+                        photos_user = self.api.get_photos(user['id'])
+                        attachment = ''
+                        for num, photo in enumerate(photos_user):
+                            attachment += f'photo{user["id"]}_{photo["id"]},'
+                            if num == 2:
+                                break
+                        self.message_send(event.user_id,
+                                          f'Встречайте {user["name"]}, vk.com/id{user["id"]}',
+                                          attachment=attachment
+                                          )
+                        add_viewed(user["id"], event.user_id)
+                        self.message_send(event.user_id,
+                                          f'{self.params["name"]}, отправь "П" или "S" {new_str}для продолжения...')
 
                 elif command == 'старт' or command == 'go':
                     self.params = self.api.get_profile_info(event.user_id)
 
                     if self.params['sex'] is None or self.params['city'] is None or self.params['bdate'] is None:
-                        self.message_send(event.user_id, f'{self.params["name"]}, у тебя не заполнен профиль ВК,'
-                                                         f'{new_str}для поиска нам нужно уточнить кое-что... ')
+                        self.message_send(event.user_id, f'{self.params["name"]}, для поиска нам нужно уточнить кое-что...,'
+                                                         f'{new_str}Ответь на вопросы отдельными сообщениями, '
+                                                         f'{new_str}Затем отправь "П" или "S" для продолжения...')
 
                         if self.params['sex'] is None:
                             sex_switch = True
@@ -72,7 +73,7 @@ class BotInterface:
 
                         if self.params['city'] is None:
                             city_name_switch = True
-                            self.message_send(event.user_id, f'В следующем сообщении напиши ГОРОД в'
+                            self.message_send(event.user_id, f'В следующем сообщении напиши ГОРОД в '
                                                              f'котором будем искать тебе пару... ')
 
                         if self.params['bdate'] is None:
@@ -81,30 +82,25 @@ class BotInterface:
 
                 elif sex_switch is True:
                     if 'жен' in command or 'дев' in command or 'баб' in command:
-                        sex_user = 2
+                        self.params['sex']= 2
                     else:
-                        sex_user = 1
+                        self.params['sex'] = 1
                     sex_switch = False
-                    self.params['sex'] = sex_user
-
 
                 elif city_name_switch is True:
-                    city_name = command
+                    self.params['city'] = self.api.get_city(command)
                     city_name_switch = False
-                    city_user = self.api.get_city(city_name)
-                    self.params['city'] = city_user
 
                 elif bdate_switch is True:
                     self.params['bdate'] = '..' + command
                     bdate_switch = False
 
-                    self.message_send(event.user_id, f'Отлично! {new_str}Отправь "П" или "S"'
-                                                     f'{new_str}для продолжения.....')
+
 
                 else:
                     self.message_send(event.user_id, f'Привет!, это Vkinder. '
                                                      f'давай подберем тебе пару.{new_str*2}'
-                                                     f'Для начала поиска введи "Старт" или "GO".{new_str} '
+                                                     f'Для активации бота введи "Старт" или "GO".{new_str} '
                                                      f'Для продолжения отправь "П" или "S" ...')
 
 
