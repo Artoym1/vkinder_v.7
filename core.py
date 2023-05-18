@@ -11,7 +11,8 @@ class VkTools:
     def get_profile_info(self, user_id):
         info, = self.api.method('users.get',
                                 {'user_ids': user_id,
-                                 'fields': 'city ,bdate== None ,sex== None ,relation,home_town'
+                                 'fields': 'city== None ,bdate== None ,sex== None ,relation,home_town'
+                                 # 'fields': 'city== None ,bdate== None ,sex== None ,relation,home_town'
                                  }
                                 )
         user_info = {'name': info['first_name'],
@@ -46,17 +47,17 @@ class VkTools:
         curent_year = datetime.now().year
         user_year = int(params['bdate'].split('.')[2])
         age = curent_year - user_year
-        age_from = age - 1
+        age_from = age - 10
         age_to = age + 1
 
         users = self.api.method('users.search',
-                                {'count': 50,
+                                {'count': 30,
                                  'offset': offset,
                                  'age_from': age_from,
                                  'age_to': age_to,
                                  'sex': sex,
                                  'city': city,
-                                 'status': 6,
+                                 'status': 1 or 6,
                                  'has_photo': True,
                                  'is_closed': False,
                                  'can_access_closed': True

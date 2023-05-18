@@ -27,24 +27,21 @@ class BotInterface:
         longpoll = VkLongPoll(self.interface)
         city_name_switch = False
         sex_switch = False
-        bdate_swith = False
+        bdate_switch = False
         new_str = '\n'
         for event in longpoll.listen():
-
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 command = event.text.lower()
-
                 if command == 'п' or command == "s":
                     if self.params is None:
                         self.message_send(event.user_id, f'Для начала поиска введи: {new_str}"Старт" или "GO"')
-
                     else:
                         users = self.api.search_users(self.params, self.offset)
                         self.offset = self.offset + 1
                         user = users.pop()
-                        while insert_viewed(user["id"]):
-                            user = users.pop()
-
+                        insert_viewed(user["id"])
+                        # while insert_viewed(user["id"]):
+                        #     user = users.pop()
                         if True:
                             photos_user = self.api.get_photos(user['id'])
                             attachment = ''
@@ -78,7 +75,7 @@ class BotInterface:
                                                              f'котором будем искать тебе пару... ')
 
                         if self.params['bdate'] is None:
-                            bdate_swith = True
+                            bdate_switch = True
                             self.message_send(event.user_id, f'В следующем сообщении отправь ГОД твоего рождения')
 
                 elif sex_switch is True:
@@ -96,9 +93,9 @@ class BotInterface:
                     city_user = self.api.get_city(city_name)
                     self.params['city'] = city_user
 
-                elif bdate_swith is True:
+                elif bdate_switch is True:
                     self.params['bdate'] = '..' + command
-                    bdate_swith = False
+                    bdate_switch = False
 
                     self.message_send(event.user_id, f'Отлично! {new_str}Отправь "П" или "S"'
                                                      f'{new_str}для продолжения.....')
