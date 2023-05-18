@@ -69,19 +69,17 @@ class BotInterface:
 
                         if self.params['sex'] is None:
                             sex_switch = True
-                            self.message_send(event.user_id, f'{self.params["name"]}, Скажи нам в '
-                                                             f'отдельном сообщении кого ты хочешь найти{new_str} '
-                                                             f'мужчину или женщину')
+                            self.message_send(event.user_id, f'{self.params["name"]}, кого будем искать?{new_str}'
+                                                             f'МУЖЧИНУ или ЖЕНЩИНУ')
 
                         if self.params['city'] is None:
                             city_name_switch = True
-                            self.message_send(event.user_id, f'В следующем сообщении напиши название города в'
+                            self.message_send(event.user_id, f'В следующем сообщении напиши ГОРОД в'
                                                              f'котором будем искать тебе пару... ')
 
                         if self.params['bdate'] is None:
                             bdate_swith = True
-                            self.message_send(event.user_id, f'Отправь дату твоего рождения в формате:'
-                                                             f'{new_str} ММ.ДД.ГГГГ')
+                            self.message_send(event.user_id, f'В следующем сообщении отправь ГОД твоего рождения')
 
                 elif sex_switch is True:
                     if 'жен' in command or 'дев' in command or 'баб' in command:
@@ -99,14 +97,14 @@ class BotInterface:
                     self.params['city'] = city_user
 
                 elif bdate_swith is True:
-                    self.params['bdate'] = command
+                    self.params['bdate'] = '..' + command
                     bdate_swith = False
 
                     self.message_send(event.user_id, f'Отлично! {new_str}Отправь "П" или "S"'
                                                      f'{new_str}для продолжения.....')
 
                 else:
-                    self.message_send(event.user_id, f'Привет!, это Vrinder. '
+                    self.message_send(event.user_id, f'Привет!, это Vkinder. '
                                                      f'давай подберем тебе пару.{new_str*2}'
                                                      f'Для начала поиска введи "Старт" или "GO".{new_str} '
                                                      f'Для продолжения отправь "П" или "S" ...')
