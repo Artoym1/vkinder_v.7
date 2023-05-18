@@ -62,7 +62,8 @@ class BotInterface:
                     self.params = self.api.get_profile_info(event.user_id)
 
                     if self.params['sex'] is None or self.params['city'] is None or self.params['bdate'] is None:
-                        self.message_send(event.user_id, f'{self.params["name"]}, для поиска нам нужно уточнить кое-что...,'
+                        self.message_send(event.user_id, f'{self.params["name"]}, для поиска нам нужно '
+                                                         f'уточнить кое-что...,'
                                                          f'{new_str}Ответь на вопросы отдельными сообщениями, '
                                                          f'{new_str}Затем отправь "П" или "S" для продолжения...')
 
@@ -82,7 +83,7 @@ class BotInterface:
 
                 elif sex_switch is True:
                     if 'жен' in command or 'дев' in command or 'баб' in command:
-                        self.params['sex']= 2
+                        self.params['sex'] = 2
                     else:
                         self.params['sex'] = 1
                     sex_switch = False
@@ -99,7 +100,7 @@ class BotInterface:
 
                 else:
                     self.message_send(event.user_id, f'Привет!, это Vkinder. '
-                                                     f'давай подберем тебе пару.{new_str*2}'
+                                                     f'давай подберем тебе пару.{new_str * 2}'
                                                      f'Для активации бота введи "Старт" или "GO".{new_str} '
                                                      f'Для продолжения отправь "П" или "S" ...')
 
