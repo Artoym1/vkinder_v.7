@@ -61,13 +61,12 @@ class BotInterface:
                 elif command == 'старт' or command == 'go':
                     self.params = self.api.get_profile_info(event.user_id)
                     self.message_send(event.user_id, f'{self.params["name"]}, вот команды для управления ботом:'
-                                                     f'{new_str*2}Отправляй П или S для перехода далее.'
+                                                     f'{new_str * 2}Отправляй П или S для перехода далее.'
                                                      f'{new_str}Отвечай на вопросы бота отдельными сообщениями, '
                                                      f'{new_str}и отправляй П или S для продолжения...')
                     if self.params['sex'] is None or self.params['city'] is None or self.params['bdate'] is None:
                         self.message_send(event.user_id, f'{self.params["name"]}, для поиска нам нужно '
                                                          f'уточнить кое-что...,')
-
 
                         if self.params['sex'] is None:
                             sex_switch = True
@@ -97,7 +96,6 @@ class BotInterface:
                 elif bdate_switch is True:
                     self.params['bdate'] = '..' + command
                     bdate_switch = False
-
 
                 else:
                     self.message_send(event.user_id, f'Привет!, это Vkinder. '
